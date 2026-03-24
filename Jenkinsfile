@@ -1,29 +1,26 @@
 pipeline {
-   agent none
-   tools{
-//     jdk "myjava"
-        maven "mymaven"
-   }
+    agent any
+    tools {
+        maven "mymaven" // Ensure this matches your Tool name in Jenkins
+    }
     stages {
-        stage('Compile') { //prod
-        agent any
+        stage('Compile') {
             steps {
-                echo "Compile the code"
-                bat "mvn compile"
+                echo 'Compiling...'
+                bat 'mvn compile'
             }
         }
-         stage('UnitTest') { //test
-         agent any
+        stage('UnitTest') {
             steps {
-                echo "Test the code"
-                bat "mvn test"
+                echo 'Testing...'
+                bat 'mvn test'
             }
         }
-         stage('Package') {//dev
-        agent {label 'linux_slave'}
+        stage('Package') {
             steps {
-                echo "Package the code"
-                bat "mvn package"
+                echo 'Packaging...'
+                // -DskipTests avoids running tests again to save time
+                bat 'mvn package -DskipTests' 
             }
         }
     }
