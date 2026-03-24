@@ -9,21 +9,21 @@ pipeline {
         agent any
             steps {
                 echo "Compile the code"
-                sh "mvn compile"
+                bat "mvn compile"
             }
         }
          stage('UnitTest') { //test
          agent any
             steps {
                 echo "Test the code"
-                sh "mvn test"
+                bat "mvn test"
             }
         }
          stage('Package') {//dev
         agent {label 'linux_slave'}
             steps {
                 echo "Package the code"
-                sh "mvn package"
+                bat "mvn package"
             }
         }
     }
