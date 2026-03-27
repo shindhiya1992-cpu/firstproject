@@ -1,15 +1,11 @@
 pipeline {
-    agent any // Required to run on the Windows host first
+    agent any
     stages {
-        stage('Build inside Docker') {
+        stage('Build') {
             steps {
-                script {
-                    // Manual call to bypass the plugin's automatic path conversion bug
-                    docker.image('node:20-alpine').inside("-v %WORKSPACE%:/app -w /app") {
-                        sh 'npm install'
-                        sh 'npm run build'
-                    }
-                }
+                // Manually run container as a batch command
+                bat 'docker run --rm -v "%WORKSPACE%":/app -w /app node:20-alpine npm install'
+                bat 'docker run --rm -v "%WORKSPACE%":/app -w /app node:20-alpine npm run build'
             }
         }
     }
