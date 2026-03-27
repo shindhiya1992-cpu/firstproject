@@ -1,26 +1,10 @@
-pipeline {
-    agent any
-    tools {
-        maven "mymaven" // Ensure this matches your Tool name in Jenkins
-    }
+ipeline {
+    agent any 
     stages {
-        stage('Compile') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Compiling...'
-                bat 'mvn compile'
-            }
-        }
-        stage('UnitTest') {
-            steps {
-                echo 'Testing...'
-                bat 'mvn test'
-            }
-        }
-        stage('Package') {
-            steps {
-                echo 'Packaging...'
-                // -DskipTests avoids running tests again to save time
-                bat 'mvn package -DskipTests' 
+                // Since you are on Windows, we use 'bat'
+                bat "docker run --rm -v %WORKSPACE%:/app -w /app node:20-alpine npm install"
             }
         }
     }
