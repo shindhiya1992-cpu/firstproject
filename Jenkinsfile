@@ -3,12 +3,11 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                // Manually run container as a batch command
-                bat 'docker run --rm -v "%WORKSPACE%":/app -w /app node:20-alpine npm install'
-                bat 'docker run --rm -v "%WORKSPACE%":/app -w /app node:20-alpine npm run build'
+                // 'sh' is for Linux/EC2. '${WORKSPACE}' is the Linux variable.
+                sh 'docker run --rm -v "${WORKSPACE}":/app -w /app node:20-alpine npm install'
+                sh 'docker run --rm -v "${WORKSPACE}":/app -w /app node:20-alpine npm run build'
             }
         }
     }
 }
-
 
