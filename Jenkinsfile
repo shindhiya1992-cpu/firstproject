@@ -2,9 +2,16 @@ pipeline {
     agent any 
     stages {
         stage('Install Dependencies') {
+            agent {
+                docker {
+                    image 'node:20-alpine'
+                    // This handles the mounting and workspace mapping automatically
+                    reuseNode true 
+                }
+            }
             steps {
-                // Since you are on Windows, we use 'bat'
-                bat "docker run --rm -v %WORKSPACE%:/app -w /app node:20-alpine npm install"
+                // Now you just run the command normally
+                sh 'npm install' 
             }
         }
     }
