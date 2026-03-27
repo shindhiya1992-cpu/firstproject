@@ -1,23 +1,18 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:20-alpine'
-            // Using /v to map workspace and -w to set working directory
-            args '-v %WORKSPACE%:/app -w /app'
-        }
-    }
+    agent any // Required to run on the Windows host first
     stages {
-        stage('Install Dependencies') {
+        stage('Build inside Docker') {
             steps {
-                // Inside the Linux container, we use 'sh'
-                sh 'npm install'
-            }
-        }
-        stage('Build') {
-            steps {
-                sh 'npm run build'
+                script {
+                    // Manual call to bypass the plugin's automatic path conversion bug
+                    docker.image('node:20-alpine').inside("-v %WORKSPACE%:/app -w /app") {
+                        sh 'npm install'
+                        sh 'npm run build'
+                    }
+                }
             }
         }
     }
 }
+
 
