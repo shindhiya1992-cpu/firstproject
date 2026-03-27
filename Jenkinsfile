@@ -1,17 +1,18 @@
 pipeline {
-    agent any 
+    agent any
     stages {
         stage('Install Dependencies') {
             agent {
                 docker {
                     image 'node:20-alpine'
-                    // This handles the mounting and workspace mapping automatically
-                    reuseNode true 
+                    // This is the key fix for Windows Jenkins
+                    args '-v %WORKSPACE%:/app -w /app'
+                    reuseNode true
                 }
             }
             steps {
-                // Now you just run the command normally
-                sh 'npm install' 
+                // Use 'sh' because the node:alpine container is Linux
+                sh 'npm install'
             }
         }
     }
